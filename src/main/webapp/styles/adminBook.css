@@ -1,0 +1,31 @@
+@charset "ISO-8859-1";
+
+table.table {
+	color: #FDF4E3; /* Set the text color */
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table.table th {
+	background-color: #212529;
+	color: #FDF4E3;
+	padding: 10px;
+}
+
+table.table td {
+	background-color: #343A40;
+	color: #FDF4E3;
+	padding: 10px;
+}
+
+table.table a.btn {
+	color: #FDF4E3;
+}
+
+table.table a.btn:hover {
+	color: #FDF4E3;
+}
+
+h2 {
+	color: #FDF4E3;
+}
