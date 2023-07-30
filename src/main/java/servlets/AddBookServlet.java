@@ -36,12 +36,12 @@ public class AddBookServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/* ===========================================================
-		Author: Rajkaran (2109039)
-		Date: 9/6/2023
-		Description: JAD CA1
-		============================================================= */
-		
+		/*
+		 * =========================================================== Author: Rajkaran
+		 * (2109039) Date: 9/6/2023 Description: JAD CA1
+		 * =============================================================
+		 */
+
 		// TODO Auto-generated method stub
 		String path = request.getContextPath() + "/pages";
 
@@ -63,22 +63,12 @@ public class AddBookServlet extends HttpServlet {
 		if (!(author.isEmpty() || category.isEmpty() || publisher.isEmpty() || src.isEmpty() || title.isEmpty()
 				|| desc.isEmpty() || ISBN.isEmpty() || price.isEmpty() || pubDate.isEmpty() || rating.isEmpty()
 				|| quantity.isEmpty())) {
-		
-		title = title.toUpperCase();	
-		
+
+			title = title.toUpperCase();
+
 			try {
 
-				// Step 1: Load JDBC Driver
-				Class.forName("com.mysql.cj.jdbc.Driver");
-
-				// Step 2: Define Connection URL
-				String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-				// Step 3: Establish connection to URL
-				Connection conn = DriverManager.getConnection(connURL);
-
-				// Step 4: Create Statement object
-				Statement stmt = conn.createStatement();
+				Connection conn = DBConnection.getConnection();
 
 				// Step 5: Execute SQL Command
 				String sqlStr = "INSERT INTO books(category_id,isbn,title,quantity,price,author_id,publisher_id,image,description,rating,publication_date) VALUES (?,?,?,?,?,?,?,?,?,?,?)";

@@ -39,7 +39,7 @@ body {
 	session.removeAttribute("searchResults");
 	%>
 
-	<div class="container text-center mt-3">
+<%-- 	<div class="container text-center mt-3">
 		<img src="${pageContext.request.contextPath}/assets/brandLogo.png"
 			alt="Paws" class="img-fluid">
 	</div>
@@ -57,7 +57,7 @@ body {
 				</form>
 			</div>
 		</div>
-	</div>
+	</div> --%>
 
 	<%
 	if (searchResults != null) {

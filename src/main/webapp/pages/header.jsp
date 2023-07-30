@@ -88,7 +88,7 @@ Description: JAD CA1
 				<div class="collapse navbar-collapse" id="navbarExample01">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item active"><a class="nav-link"
-							aria-current="page" href="index.jsp">Home</a></li>
+							aria-current="page" href="home.jsp">Home</a></li>
 
 						<!-- Categories -->
 						<li class="navbar-item has-dropdown is-hoverable"><a

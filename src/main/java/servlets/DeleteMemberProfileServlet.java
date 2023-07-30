@@ -46,14 +46,7 @@ public class DeleteMemberProfileServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		try {
-			// Step 1: Load JDBC Driver
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
-			// Step 2: Define Connection URL
-			String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-			// Step 3: Establish connection to URL
-			Connection conn = DriverManager.getConnection(connURL);
+			Connection conn = DBConnection.getConnection();
 
 			// Step 5: Execute SQL Command
 			String sqlCall = "{CALL DeleteMember(?)}";
