@@ -91,7 +91,7 @@ public class AdminLoginServlet extends HttpServlet {
 				session.setMaxInactiveInterval(900);
 				
 				
-				response.sendRedirect(path + "//index.jsp");
+				response.sendRedirect(path + "//home.jsp");
 			} else {
 
 				// for invalid credentials

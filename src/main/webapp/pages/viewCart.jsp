@@ -5,9 +5,9 @@
 <%@ page import="java.net.*"%>
 <%
 String userRole = (String) session.getAttribute("sessUserRole");
-
 if (userRole != null) {
 	if (userRole.equals("member")) {
+		int member_id1 = (int) session.getAttribute("sessUserID");
 %>
 <%
 /* ===========================================================
@@ -46,7 +46,7 @@ table tbody td, table thead th {
 <body>
 	<%@ include file="header.jsp"%>
 
-	<%
+	<%-- 	<%
 	double totalCost = 0;
 
 	ArrayList<Integer> shoppingCart = (ArrayList<Integer>) session.getAttribute("shoppingCart");
@@ -59,17 +59,15 @@ table tbody td, table thead th {
 			<div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">
 				<img src="${pageContext.request.contextPath}/assets/bag.svg" alt=""
 					class="img-fluid mb-4">
-				<h2>Your shopping cart is empty</h2>
+				<h2>Your shopping cart is empty</h2> 
 				<p class="mb-4">Keep Shopping!</p>
-				<a href="index.jsp" class="btn btn-primary">Explore Books</a>
+				<a href="home.jsp" class="btn btn-primary">Explore Books</a>
 			</div>
 		</div>
 	</div>
-
 	<%
 	} else {
-	%>
-	<!-- start of table -->
+	%> --%>
 	<div class="container h-100 py-5">
 		<h1 class="mb-5">Shopping Cart</h1>
 		<div
@@ -81,40 +79,42 @@ table tbody td, table thead th {
 							<tr>
 								<th scope="col" class="h5">Books</th>
 								<th scope="col">Category</th>
+								<th scope="col">Quantity</th>
 								<th scope="col">Price</th>
 								<th scope="col">Status</th>
 							</tr>
 						</thead>
 						<tbody>
 							<%
+							int bookCount = 0;
+							double totalCost = 0;
+
 							try {
-								// Step 1: Load JDBC Driver
 								Class.forName("com.mysql.cj.jdbc.Driver");
 
-								// Step 2: Define Connection URL
-								String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
+								String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
 
-								// Step 3: Establish connection to URL
 								Connection conn = DriverManager.getConnection(connURL);
 
-								// Step 4: Create PreparedStatement object
-								String sqlStr = "SELECT books.*, authors.author_name,categories.category_name FROM books JOIN authors ON books.author_id=authors.author_id JOIN categories ON books.category_id=categories.category_id WHERE book_id=?;";
+								String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
 								PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 
-								for (Integer bookI : shoppingCart) {
-									pstmt.setInt(1, bookI);
+				
+								pstmt.setInt(1, member_id1);
 
-									// Step 6: Execute SQL query
-									ResultSet rs = pstmt.executeQuery();
+								ResultSet rs = pstmt.executeQuery();
 
-									while (rs.next()) {
-								String title = rs.getString("title");
-								String src = rs.getString("image");
-								String author = rs.getString("author_name");
-								String category = rs.getString("category_name");
-								int bookId = rs.getInt("book_id");
-								double price = rs.getDouble("price");
-								totalCost += price;
+								while (rs.next()) {
+
+									String title = rs.getString("title");
+									String src = rs.getString("image");
+									String author = rs.getString("author_name");
+									String category = rs.getString("category_name");
+									int bookId = rs.getInt("book_id");
+									int quantity = rs.getInt("cart_quantity");
+									double price = rs.getDouble("price");
+									totalCost = (quantity*price) +totalCost;
+									bookCount += quantity;
 							%>
 							<tr>
 								<th scope="row">
@@ -132,17 +132,20 @@ table tbody td, table thead th {
 								</td>
 								<td class="align-middle">
 									<p class="mb-0" style="font-weight: 500;">
+										<input type="number" min="1  class="
+											form-control" style="max-width: 80px;" value="<%=quantity%>">
+									</p>
+								</td>
+								<td class="align-middle">
+									<p class="mb-0" style="font-weight: 500;">
 										$<%=price%></p>
 								</td>
 								<td class="align-middle"><a
 									class="btn btn-danger btn-sm delete-button"
 									onclick="confirmDelete(<%=bookId%>)">Delete</a></td>
 							</tr>
-
-
-
 							<%
-							}
+							//	}
 							}
 							conn.close();
 							} catch (Exception e) {
@@ -158,21 +161,23 @@ table tbody td, table thead th {
 			<div class="col-lg-4 col-xl-3">
 				<%
 				//get total number of books
-				int totalBooks = shoppingCart.size();
+				//int totalBooks = shoppingCart.size();
 				%>
 				<div class="card">
 					<div class="card-body">
 						<div class="d-flex justify-content-between"
 							style="font-weight: 500;">
 							<p class="mb-2">Total Books:</p>
-							<p class="mb-2"><%=totalBooks%></p>
+							<p class="mb-2"><%=bookCount%></p>
 						</div>
 						<hr class="my-4">
 						<div class="d-flex justify-content-between mb-4"
 							style="font-weight: 500;">
 							<p class="mb-2">Total Cost:</p>
 							<p class="mb-2">
-								$<%=totalCost%></p>
+								$
+								<%=totalCost%>
+							</p>
 						</div>
 						<button type="button" class="btn btn-primary btn-block btn-lg ">
 							<div class="d-flex justify-content-end">
@@ -184,9 +189,9 @@ table tbody td, table thead th {
 			</div>
 		</div>
 	</div>
-	<%
+	<%-- 	<%
 	}
-	%>
+	%> --%>
 	<script>
 		function confirmDelete(bookId) {
 		  if (confirm("Are you sure you want to delete this item?")) {

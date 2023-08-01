@@ -27,7 +27,7 @@ Description: JAD CA1
 		
 		book_id = Integer.parseInt(bookId);
 	} else {
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("home.jsp");
 	}
 
 	String title = "";

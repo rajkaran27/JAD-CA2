@@ -1,18 +1,19 @@
 package servlets;
 
-import java.io.IOException;
+import java.io.*;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
+import java.net.*;
 import java.net.URLEncoder;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+
+import com.mysql.cj.jdbc.*;
 
 /**
  * Servlet implementation class AddToCartServlet
@@ -31,42 +32,47 @@ public class AddToCartServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/* ===========================================================
-		Author: Rajkaran (2109039)
-		Date: 9/6/2023
-		Description: JAD CA1
-		============================================================= */
-		
 		String path = request.getContextPath() + "/pages";
-
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
 
 		String userRole = (String) session.getAttribute("sessUserRole");
-		ArrayList<Integer> shoppingCart = (ArrayList<Integer>) session.getAttribute("shoppingCart");
 		String strbookId = request.getParameter("bookId");
+		Integer member_id = (Integer) session.getAttribute("sessUserID"); // Use Integer data type here
 		int book_id = Integer.parseInt(strbookId);
 
 		if (userRole != null) {
 			if (userRole.equals("member")) {
+				try {
+					System.out.println(member_id);
+					System.out.println(book_id);
 
-				if (shoppingCart == null) {
-					shoppingCart = new ArrayList<>();
-					session.setAttribute("shoppingCart", shoppingCart);
+					Connection conn = DBConnection.getConnection();
+
+					String sqlCall = "{CALL AddToCart(?,?,?)}";
+
+					CallableStatement cs = conn.prepareCall(sqlCall);
+					cs.setInt(1, member_id); // Use setInt for member_id
+					cs.setInt(2, book_id);
+					cs.setInt(3, 1);
+					cs.executeUpdate();
+					cs.close();
+					conn.close();
+
+					response.sendRedirect(path + "/viewCart.jsp");
+				} catch (SQLIntegrityConstraintViolationException e) {
+					e.printStackTrace();
+					out.println("Error: " + e);
+				} catch (Exception e) {
+					e.printStackTrace();
+					out.println("Error: " + e);
 				}
-
-				shoppingCart.add(book_id);
-
-				session.setAttribute("shoppingCart", shoppingCart);
-				response.sendRedirect(path+"//viewCart.jsp");
-
 			} else {
 				response.sendRedirect(path + "//login.jsp?errCode=accessDenied");
 			}
 		} else {
 			response.sendRedirect(path + "//login.jsp?errCode=accessDenied");
 		}
-
 	}
 
 }

@@ -36,7 +36,7 @@ body {
 	<%@ include file="header.jsp"%>
 	<%
 	String strmemberId = request.getParameter("memberId");
-	int member_id = Integer.parseInt(strmemberId);
+	int member_id1 = Integer.parseInt(strmemberId);
 
 	String email = "";
 	String username = "";
@@ -59,7 +59,7 @@ body {
 		PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 
 		// Set parameter values for placeholders
-		pstmt.setInt(1, member_id);
+		pstmt.setInt(1, member_id1);
 
 		// Step 5: Execute SQL query
 		ResultSet rs = pstmt.executeQuery();
@@ -104,7 +104,7 @@ body {
 			</div>
 
 			<div class="d-flex justify-content-end">
-				<input type="hidden" name="memberId" value="<%=member_id%>">
+				<input type="hidden" name="memberId" value="<%=member_id1%>">
 				<button type="submit" class="btn btn-primary">Update Member</button>
 			</div>
 		</form>

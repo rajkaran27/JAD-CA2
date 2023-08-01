@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 		String path = request.getContextPath() + "/pages";
 
 		String user = request.getParameter("loginId");
-		String pwd = request.getParameter("password");
+		String pwd = request.getParameter("password");	
 		
 		if (!user.isEmpty() && !pwd.isEmpty() ) {
 
@@ -57,9 +57,6 @@ public class LoginServlet extends HttpServlet {
 
 			try {
 				Connection conn = DBConnection.getConnection();
-
-				// Step 4: Create Statement object
-				Statement stmt = conn.createStatement();
 				
 				String sqlCall = "{CALL MemberLogin(?,?)}";
 				
@@ -90,11 +87,7 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("sessUserRole", "member");
 				session.setAttribute("sessUserID", id);
 				session.setMaxInactiveInterval(900);
-				
-						
-				
-				
-				response.sendRedirect(path + "//index.jsp");
+				response.sendRedirect(path + "//home.jsp");
 			} else {
 
 				// for invalid credentials

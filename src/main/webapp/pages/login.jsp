@@ -55,7 +55,7 @@ Description: JAD CA1
 						<div class="card-body p-5">
 							<h1 class="fs-4 card-title fw-bold mb-4" style="color: #0C243C">Login</h1>
 							<form action="<%=request.getContextPath()%>/LoginServlet"
-								method="POST">
+								method="GET">
 								<div class="mb-3">
 									<label class="mb-2 text-muted" for="email">Username</label> <input
 										type="text" class="form-control" required autofocus
