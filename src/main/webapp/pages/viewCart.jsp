@@ -197,7 +197,7 @@ table tbody td, table thead th {
 						</div>
 						<button type="button" class="btn btn-primary btn-block btn-lg ">
 							<div class="d-flex justify-content-end">
-								<span>Checkout</span>
+								<a href="checkout.jsp">Checkout</a>
 							</div>
 						</button>
 					</div>
