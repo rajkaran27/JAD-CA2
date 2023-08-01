@@ -36,30 +36,55 @@
 		<div class="container text-center">
 			<h3 class="text-center mb-4 border-bottom">Best Sellers</h3>
 			<div class="row">
+				<%
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+
+					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
+
+					Connection conn = DriverManager.getConnection(connURL);
+
+					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id ORDER BY purchased DESC LIMIT 4;";
+					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
+
+					ResultSet rs = pstmt.executeQuery();
+
+					while (rs.next()) {
+
+						String title = rs.getString("title");
+						String src = rs.getString("image");
+						String author = rs.getString("author_name");
+						String category = rs.getString("category_name");
+						int bookId = rs.getInt("book_id");
+				%>
 				<div class="col-6 col-sm-3 mb-4">
-					<img src="bestseller_book1.jpg" alt="Bestseller Book 1"
-						class="img-fluid">
-					<p>Book Title 1</p>
-					<p>Author Name 1</p>
+					<a href='bookDetails.jsp?bookId=<%=bookId%>'
+						style="text-decoration: none;">
+						<div class='card' style='border-radius: 15px; width: 20rem;'>
+							<div class='bg-image'>
+								<img src='<%=src%>'
+									style='border-top-left-radius: 15px; border-top-right-radius: 15px;'
+									class='img-fluid' alt='Book Image' />
+							</div>
+							<div class='card-body pb-0'>
+								<div
+									class='d-flex justify-content-between align-items-end pb-2 mb-1'>
+									<p style="color: black"><%=title%></p>
+									<p style="color: black"><%=author%></p>
+								</div>
+							</div>
+						</div>
+					</a>
 				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="bestseller_book2.jpg" alt="Bestseller Book 2"
-						class="img-fluid">
-					<p>Book Title 2</p>
-					<p>Author Name 2</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="bestseller_book3.jpg" alt="Bestseller Book 3"
-						class="img-fluid">
-					<p>Book Title 3</p>
-					<p>Author Name 3</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="bestseller_book4.jpg" alt="Bestseller Book 4"
-						class="img-fluid">
-					<p>Book Title 4</p>
-					<p>Author Name 4</p>
-				</div>
+				<%
+				}
+				conn.close();
+				} catch (Exception e) {
+				e.printStackTrace();
+				out.println("Error: " + e);
+				}
+				%>
+
 			</div>
 		</div>
 	</div>
@@ -69,27 +94,54 @@
 		<div class="container text-center">
 			<h3 class="text-center mb-4 border-bottom">Fiction</h3>
 			<div class="row">
-				<!-- Replace the example book covers and details with actual book data -->
+				<%
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+
+					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
+
+					Connection conn = DriverManager.getConnection(connURL);
+
+					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id WHERE categories.category_id=1;";
+					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
+
+					ResultSet rs = pstmt.executeQuery();
+
+					while (rs.next()) {
+
+						String title = rs.getString("title");
+						String src = rs.getString("image");
+						String author = rs.getString("author_name");
+						String category = rs.getString("category_name");
+						int bookId = rs.getInt("book_id");
+				%>
 				<div class="col-6 col-sm-3 mb-4">
-					<img src="fiction_book1.jpg" alt="Fiction Book 1" class="img-fluid">
-					<p>Book Title 1</p>
-					<p>Author Name 1</p>
+					<a href='bookDetails.jsp?bookId=<%=bookId%>'
+						style="text-decoration: none;">
+						<div class='card' style='border-radius: 15px; width: 20rem;'>
+							<div class='bg-image'>
+								<img src='<%=src%>'
+									style='border-top-left-radius: 15px; border-top-right-radius: 15px;'
+									class='img-fluid' alt='Book Image' />
+							</div>
+							<div class='card-body pb-0'>
+								<div
+									class='d-flex justify-content-between align-items-end pb-2 mb-1'>
+									<p style="color: black"><%=title%></p>
+									<p style="color: black"><%=author%></p>
+								</div>
+							</div>
+						</div>
+					</a>
 				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="fiction_book2.jpg" alt="Fiction Book 2" class="img-fluid">
-					<p>Book Title 2</p>
-					<p>Author Name 2</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="fiction_book3.jpg" alt="Fiction Book 3" class="img-fluid">
-					<p>Book Title 3</p>
-					<p>Author Name 3</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="fiction_book4.jpg" alt="Fiction Book 4" class="img-fluid">
-					<p>Book Title 4</p>
-					<p>Author Name 4</p>
-				</div>
+				<%
+				}
+				conn.close();
+				} catch (Exception e) {
+				e.printStackTrace();
+				out.println("Error: " + e);
+				}
+				%>
 			</div>
 		</div>
 	</div>
@@ -97,40 +149,62 @@
 	<!-- Non-Fiction Section -->
 	<div id="nonfiction" class="mt-5">
 		<div class="container text-center">
-			<h3 class="container text-center border-bottom">Non-Fiction</h3>
+			<h3 class="container text-center border-bottom">Horror</h3>
 			<div class="row">
-				<!-- Replace the example book covers and details with actual book data -->
+				<%
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+
+					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
+
+					Connection conn = DriverManager.getConnection(connURL);
+
+					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id WHERE categories.category_id=8;";
+					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
+
+					ResultSet rs = pstmt.executeQuery();
+
+					while (rs.next()) {
+
+						String title = rs.getString("title");
+						String src = rs.getString("image");
+						String author = rs.getString("author_name");
+						String category = rs.getString("category_name");
+						int bookId = rs.getInt("book_id");
+				%>
 				<div class="col-6 col-sm-3 mb-4">
-					<img src="nonfiction_book1.jpg" alt="Non-Fiction Book 1"
-						class="img-fluid">
-					<p>Book Title 1</p>
-					<p>Author Name 1</p>
+					<a href='bookDetails.jsp?bookId=<%=bookId%>'
+						style="text-decoration: none;">
+						<div class='card' style='border-radius: 15px; width: 20rem;'>
+							<div class='bg-image'>
+								<img src='<%=src%>'
+									style='border-top-left-radius: 15px; border-top-right-radius: 15px;'
+									class='img-fluid' alt='Book Image' />
+							</div>
+							<div class='card-body pb-0'>
+								<div
+									class='d-flex justify-content-between align-items-end pb-2 mb-1'>
+									<p style="color: black"><%=title%></p>
+									<p style="color: black"><%=author%></p>
+								</div>
+							</div>
+						</div>
+					</a>
 				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="nonfiction_book2.jpg" alt="Non-Fiction Book 2"
-						class="img-fluid">
-					<p>Book Title 2</p>
-					<p>Author Name 2</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="nonfiction_book3.jpg" alt="Non-Fiction Book 3"
-						class="img-fluid">
-					<p>Book Title 3</p>
-					<p>Author Name 3</p>
-				</div>
-				<div class="col-6 col-sm-3 mb-4">
-					<img src="nonfiction_book4.jpg" alt="Non-Fiction Book 4"
-						class="img-fluid">
-					<p>Book Title 4</p>
-					<p>Author Name 4</p>
-				</div>
+				<%
+				}
+				conn.close();
+				} catch (Exception e) {
+				e.printStackTrace();
+				out.println("Error: " + e);
+				}
+				%>
 			</div>
 		</div>
 	</div>
 
 
 
-
-</body>
 <%@ include file="footer.jsp"%>
+</body>
 </html>
