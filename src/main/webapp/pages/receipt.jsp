@@ -20,6 +20,7 @@
             <td><b>Merchant:</b></td>
             <td>Company ABC Ltd.</td>
         </tr>
+        
         <tr>
             <td><b>Payer:</b></td>
             <td>${payer.firstName} ${payer.lastName}</td>      
