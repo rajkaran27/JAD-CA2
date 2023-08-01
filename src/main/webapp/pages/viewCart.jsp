@@ -46,14 +46,46 @@ table tbody td, table thead th {
 <body>
 	<%@ include file="header.jsp"%>
 
-	<%-- 	<%
+	<%
+	int bookCount = 0;
 	double totalCost = 0;
 
-	ArrayList<Integer> shoppingCart = (ArrayList<Integer>) session.getAttribute("shoppingCart");
+	try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
 
-	if (shoppingCart == null || shoppingCart.isEmpty()) {
+		String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
+
+		Connection conn = DriverManager.getConnection(connURL);
+
+		String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
+		PreparedStatement pstmt = conn.prepareStatement(sqlStr);
+
+		pstmt.setInt(1, member_id1);
+
+		ResultSet rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+
+			String title = rs.getString("title");
+			String src = rs.getString("image");
+			String author = rs.getString("author_name");
+			String category = rs.getString("category_name");
+			int bookId = rs.getInt("book_id");
+			int quantity = rs.getInt("cart_quantity");
+			double price = rs.getDouble("price");
+			totalCost = (quantity * price) + totalCost;
+			bookCount += quantity;
+		}
+		conn.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+		out.println("Error: " + e);
+	}
 	%>
 
+	<%
+	if (bookCount == 0) {
+	%>
 	<div class="container mt-5">
 		<div class="row">
 			<div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">
@@ -67,7 +99,7 @@ table tbody td, table thead th {
 	</div>
 	<%
 	} else {
-	%> --%>
+	%>
 	<div class="container h-100 py-5">
 		<h1 class="mb-5">Shopping Cart</h1>
 		<div
@@ -86,9 +118,6 @@ table tbody td, table thead th {
 						</thead>
 						<tbody>
 							<%
-							int bookCount = 0;
-							double totalCost = 0;
-
 							try {
 								Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -132,20 +161,16 @@ table tbody td, table thead th {
 								</td>
 								<td class="align-middle">
 									<p class="mb-0" style="font-weight: 500;">
-										<input type="number" min="1  class="
-											form-control" style="max-width: 80px;" value="<%=quantity%>">
+										<input type="number" min="1" class="form-control" style="max-width: 80px;" value="<%=quantity%>">
 									</p>
 								</td>
 								<td class="align-middle">
 									<p class="mb-0" style="font-weight: 500;">
 										$<%=price%></p>
 								</td>
-								<td class="align-middle"><a
-									class="btn btn-danger btn-sm delete-button"
-									onclick="confirmDelete(<%=bookId%>)">Delete</a></td>
+								<td class="align-middle"><a class="btn btn-danger btn-sm delete-button" onclick="confirmDelete(<%=bookId%>)">Delete</a></td>
 							</tr>
 							<%
-							//	}
 							}
 							conn.close();
 							} catch (Exception e) {
@@ -159,25 +184,16 @@ table tbody td, table thead th {
 			</div>
 
 			<div class="col-lg-4 col-xl-3">
-				<%
-				//get total number of books
-				//int totalBooks = shoppingCart.size();
-				%>
 				<div class="card">
 					<div class="card-body">
-						<div class="d-flex justify-content-between"
-							style="font-weight: 500;">
+						<div class="d-flex justify-content-between" style="font-weight: 500;">
 							<p class="mb-2">Total Books:</p>
 							<p class="mb-2"><%=bookCount%></p>
 						</div>
 						<hr class="my-4">
-						<div class="d-flex justify-content-between mb-4"
-							style="font-weight: 500;">
+						<div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
 							<p class="mb-2">Total Cost:</p>
-							<p class="mb-2">
-								$
-								<%=totalCost%>
-							</p>
+							<p class="mb-2">$<%=totalCost%></p>
 						</div>
 						<button type="button" class="btn btn-primary btn-block btn-lg ">
 							<div class="d-flex justify-content-end">
@@ -189,27 +205,25 @@ table tbody td, table thead th {
 			</div>
 		</div>
 	</div>
-	<%-- 	<%
+	<%
 	}
-	%> --%>
+	%>
+
 	<script>
 		function confirmDelete(bookId) {
-		  if (confirm("Are you sure you want to delete this item?")) {
-		    window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId="+ bookId;
+			if (confirm("Are you sure you want to delete this item?")) {
+				window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId="+ bookId;
 			}
-		  }
-		
+		}
 	</script>
 	<%@ include file="footer.jsp"%>
 </body>
 </html>
 <%
 } else {
-response.sendRedirect("login.jsp?errCode=accessDenied");
+	response.sendRedirect("login.jsp?errCode=accessDenied");
 }
-} else
-
-{
-response.sendRedirect("login.jsp?errCode=accessDenied");
+} else {
+	response.sendRedirect("login.jsp?errCode=accessDenied");
 }
 %>
