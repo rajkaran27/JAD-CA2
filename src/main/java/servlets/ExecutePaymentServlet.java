@@ -7,31 +7,36 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.*;
+ 
+import com.paypal.api.payments.*;
 import com.paypal.base.rest.PayPalRESTException;
-
-
-@WebServlet("/AuthorizePaymentServlet")
-public class AuthorizePaymentServlet extends HttpServlet {
+/**
+ * Servlet implementation class ExecutePaymentServlet
+ */
+@WebServlet("/ExecutePaymentServlet")
+public class ExecutePaymentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
  
-    public AuthorizePaymentServlet() {
+    public ExecutePaymentServlet() {
     }
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String product = request.getParameter("product");
-        String subtotal = request.getParameter("subtotal");
-        String shipping = request.getParameter("shipping");
-        String tax = request.getParameter("tax");
-        String total = request.getParameter("total");
-         
-        OrderDetail orderDetail = new OrderDetail(product, subtotal, shipping, tax, total);
+        String paymentId = request.getParameter("paymentId");
+        String payerId = request.getParameter("PayerID");
  
         try {
             PaymentServices paymentServices = new PaymentServices();
-            String approvalLink = paymentServices.authorizePayment(orderDetail);
+            Payment payment = paymentServices.executePayment(paymentId, payerId);
+             
+            PayerInfo payerInfo = payment.getPayer().getPayerInfo();
+            Transaction transaction = payment.getTransactions().get(0);
+             
+            request.setAttribute("payer", payerInfo);
+            request.setAttribute("transaction", transaction);          
  
-            response.sendRedirect(approvalLink);
+            request.getRequestDispatcher("receipt.jsp").forward(request, response);
              
         } catch (PayPalRESTException ex) {
             request.setAttribute("errorMessage", ex.getMessage());
