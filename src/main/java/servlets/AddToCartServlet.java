@@ -13,8 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import com.mysql.cj.jdbc.*;
-
 /**
  * Servlet implementation class AddToCartServlet
  */
