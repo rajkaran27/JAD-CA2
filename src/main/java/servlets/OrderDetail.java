@@ -1,38 +1,47 @@
 package servlets;
 
+import java.util.*;
+
 public class OrderDetail {
-    private String productName;
-    private float subtotal;
-    private float shipping;
-    private float tax;
-    private float total;
- 
-    public OrderDetail(String productName, String subtotal,
-            String shipping, String tax, String total) {
-        this.productName = productName;
-        this.subtotal = Float.parseFloat(subtotal);
-        this.shipping = Float.parseFloat(shipping);
-        this.tax = Float.parseFloat(tax);
-        this.total = Float.parseFloat(total);
-    }
- 
-    public String getProductName() {
-        return productName;
-    }
- 
-    public String getSubtotal() {
-        return String.format("%.2f", subtotal);
-    }
- 
-    public String getShipping() {
-        return String.format("%.2f", shipping);
-    }
- 
-    public String getTax() {
-        return String.format("%.2f", tax);
-    }
-     
-    public String getTotal() {
-        return String.format("%.2f", total);
-    }
+
+    private List<Integer> bookIds;
+	private List<Double> price;
+	private List<Integer> quantity;
+
+	public OrderDetail(List<Integer> bookId, double price, int quantity) {
+        this.bookIds = new ArrayList<>();
+        this.price = new ArrayList<>();
+        this.quantity = new ArrayList<>();
+	}
+
+	public OrderDetail() {
+	}
+
+	public List<Integer> getBookIds() {
+		return bookIds;
+	}
+
+	public void setBookIds(List<Integer> bookIds) {
+		this.bookIds = bookIds;
+	}
+
+	public List<Double> getPrice() {
+		return price;
+	}
+
+	public void setPrice(List<Double> price) {
+		this.price = price;
+	}
+
+	public List<Integer> getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(List<Integer> quantity) {
+		this.quantity = quantity;
+	}
+
+
+
+
 }

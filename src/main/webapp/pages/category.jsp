@@ -34,7 +34,6 @@ body {
 </head>
 <body>
 	<%
-	Connection conn = null;
 	try {
 		StringBuilder htmlBuilder = new StringBuilder();
 
