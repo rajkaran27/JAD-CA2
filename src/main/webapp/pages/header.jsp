@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="servlets.DBConnection"%>
 <%
 /* ===========================================================
 Author: Rajkaran (2109039)
@@ -34,15 +35,9 @@ Description: JAD CA1
 	String genre = "";
 	/* catID */
 	int genre_id = 0;
+	Connection conn = null;
 	try {
-		// Step 1: Load JDBC Driver
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
-		// Step 2: Define Connection URL
-		String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-		// Step 3: Establish connection to URL
-		Connection conn = DriverManager.getConnection(connURL);
+		conn = DBConnection.getConnection();
 
 		// Step 4: Create PreparedStatement object
 
@@ -106,14 +101,7 @@ Description: JAD CA1
 						if (session.getAttribute("sessUserID") != null) {
 					int member_id = (int) session.getAttribute("sessUserID");
 					try {
-						// Step 1: Load JDBC Driver
-						Class.forName("com.mysql.cj.jdbc.Driver");
-
-						// Step 2: Define Connection URL
-						String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-						// Step 3: Establish connection to URL
-						Connection conn = DriverManager.getConnection(connURL);
+						conn = DBConnection.getConnection();
 
 						// Step 4: Create Statement object
 						Statement stmt = conn.createStatement();

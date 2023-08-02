@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="servlets.DBConnection"%>
 <%
 String userRole = (String) session.getAttribute("sessUserRole");
 
@@ -113,17 +114,9 @@ Description: JAD CA1
 							<option value="" selected disabled>Select category</option>
 							<%
 							// Category dynamic listing
-
+							Connection conn = null;
 							try {
-
-								// Step 1: Load JDBC Driver
-								Class.forName("com.mysql.cj.jdbc.Driver");
-
-								// Step 2: Define Connection URL
-								String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-								// Step 3: Establish connection to URL
-								Connection conn = DriverManager.getConnection(connURL);
+								conn = DBConnection.getConnection();
 
 								// Step 4: Create Statement object
 								Statement stmt = conn.createStatement();
@@ -157,15 +150,7 @@ Description: JAD CA1
 							// Author dynamic listing
 
 							try {
-
-								// Step 1: Load JDBC Driver
-								Class.forName("com.mysql.cj.jdbc.Driver");
-
-								// Step 2: Define Connection URL
-								String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-								// Step 3: Establish connection to URL
-								Connection conn = DriverManager.getConnection(connURL);
+								conn = DBConnection.getConnection();
 
 								// Step 4: Create Statement object
 								Statement stmt = conn.createStatement();
@@ -199,15 +184,7 @@ Description: JAD CA1
 							// Publisher dynamic listing
 
 							try {
-
-								// Step 1: Load JDBC Driver
-								Class.forName("com.mysql.cj.jdbc.Driver");
-
-								// Step 2: Define Connection URL
-								String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-								// Step 3: Establish connection to URL
-								Connection conn = DriverManager.getConnection(connURL);
+								conn = DBConnection.getConnection();
 
 								// Step 4: Create Statement object
 								Statement stmt = conn.createStatement();
@@ -255,14 +232,7 @@ Description: JAD CA1
 					// Books dynamic listing
 
 					try {
-						// Step 1: Load JDBC Driver
-						Class.forName("com.mysql.cj.jdbc.Driver");
-
-						// Step 2: Define Connection URL
-						String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-						// Step 3: Establish connection to URL
-						Connection conn = DriverManager.getConnection(connURL);
+						conn = DBConnection.getConnection();
 
 						// Step 4: Create Statement object
 						Statement stmt = conn.createStatement();

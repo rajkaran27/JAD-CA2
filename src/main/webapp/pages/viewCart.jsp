@@ -51,11 +51,7 @@ table tbody td, table thead th {
 	double totalCost = 0;
 
 	try {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
-		String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
-
-		Connection conn = DriverManager.getConnection(connURL);
+		conn = DBConnection.getConnection();
 
 		String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
 		PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -119,11 +115,7 @@ table tbody td, table thead th {
 						<tbody>
 							<%
 							try {
-								Class.forName("com.mysql.cj.jdbc.Driver");
-
-								String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
-
-								Connection conn = DriverManager.getConnection(connURL);
+								conn = DBConnection.getConnection();
 
 								String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
 								PreparedStatement pstmt = conn.prepareStatement(sqlStr);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-	<%
+<%@ page import="servlets.DBConnection"%>
+<%
 /* ===========================================================
 Author: Pranjal (2228396)
 Date: 9/6/2023
@@ -40,18 +41,12 @@ body {
 	} else {
 		out.print("error");
 	}
+	Connection conn = null;
 	try {
 		StringBuilder htmlBuilder = new StringBuilder();
 
-		// Step 1: Load JDBC Driver
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
-		// Step 2: Define Connection URL
-		String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-		// Step 3: Establish connection to URL
-		Connection conn = DriverManager.getConnection(connURL);
-
+		conn = DBConnection.getConnection();
+		
 		String genreSqlStr = "SELECT category_name FROM categories WHERE category_id = ?;";
 		PreparedStatement genrePstmt = conn.prepareStatement(genreSqlStr);
 		genrePstmt.setInt(1, cat_id);

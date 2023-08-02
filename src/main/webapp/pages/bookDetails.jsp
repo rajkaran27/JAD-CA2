@@ -1,6 +1,7 @@
 	<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="servlets.DBConnection"%>
 <%
 /* ===========================================================
 Author: Rajkaran (2109039)
@@ -41,20 +42,10 @@ Description: JAD CA1
 	int rating = 0;
 	double price = 0;
 
+	Connection conn = null;
 	try {
-		// Step 1: Load JDBC Driver
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
-		// Step 2: Define Connection URL
-		String connURL = "jdbc:mysql://localhost/bookstore?user=root&password=pjraj12!&serverTimezone=UTC";
-
-		// Step 3: Establish connection to URL
-		Connection conn = DriverManager.getConnection(connURL);
-
-		// Step 4: Create PreparedStatement object
-
+		conn = DBConnection.getConnection();
 		String sqlStr = "SELECT books.*, categories.category_name AS category, publishers.publisher_name AS publisher, authors.author_name AS author FROM books JOIN categories ON categories.category_id=books.category_id JOIN publishers ON publishers.publisher_id = books.publisher_id JOIN authors ON authors.author_id = books.author_id WHERE books.book_id = ?";
-
 		PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 
 		// Set parameter values for placeholders

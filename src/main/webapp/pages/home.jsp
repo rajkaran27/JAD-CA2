@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="java.sql.*"%>
+<%@ page import="servlets.DBConnection"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,12 +38,9 @@
 			<h3 class="text-center mb-4 border-bottom">Best Sellers</h3>
 			<div class="row">
 				<%
+				
 				try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-
-					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
-
-					Connection conn = DriverManager.getConnection(connURL);
+					conn = DBConnection.getConnection();
 
 					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id ORDER BY purchased DESC LIMIT 4;";
 					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -96,11 +94,7 @@
 			<div class="row">
 				<%
 				try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-
-					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
-
-					Connection conn = DriverManager.getConnection(connURL);
+					conn = DBConnection.getConnection();
 
 					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id WHERE categories.category_id=1;";
 					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -153,11 +147,7 @@
 			<div class="row">
 				<%
 				try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-
-					String connURL = "jdbc:mysql://jad-database.coaftljc64cm.us-east-1.rds.amazonaws.com/bookstore?user=admin&password=pjraj12!";
-
-					Connection conn = DriverManager.getConnection(connURL);
+					conn = DBConnection.getConnection();
 
 					String sqlStr = "SELECT books.*, authors.author_name, categories.category_name FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id WHERE categories.category_id=8;";
 					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -205,6 +195,6 @@
 
 
 
-<%@ include file="footer.jsp"%>
+	<%@ include file="footer.jsp"%>
 </body>
 </html>
