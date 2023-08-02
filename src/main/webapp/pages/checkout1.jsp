@@ -12,7 +12,7 @@
 <div align="center">
     <h1>Check Out</h1>
     <br/>
-    <form action="authorize_payment" method="post">
+    <form action="<%=request.getContextPath()%>/AuthorizePaymentServlet" method="POST">
     <table>
         <tr>
             <td>Product/Service:</td>
