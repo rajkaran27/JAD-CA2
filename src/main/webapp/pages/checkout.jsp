@@ -22,41 +22,47 @@ if (userRole != null) {
 </head>
 <body>
 	<%@ include file="header.jsp"%>
-
-<%-- 	<%
-	int bookCount = 0;
-	double totalCost = 0;
-	String title = null;
-	String src = null;
-	int bookId = 0;
-	int quantity = 0;
-	double price = 0;
-
+	<%
+	String email =null;
+	String first =null;
+	String last =null;
+	String phone = null;
+	String address1 = null;
+	String address2="";
+	String postal=null;
+	String unit = null;
+	
+	
 	try {
 		conn = DBConnection.getConnection();
 
-		String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
+		String sqlStr = "SELECT members.*,address.* FROM members JOIN address ON members.member_id=address.member_id WHERE members.member_id =?;";
 		PreparedStatement pstmt = conn.prepareStatement(sqlStr);
+
 
 		pstmt.setInt(1, member_id1);
 
 		ResultSet rs = pstmt.executeQuery();
-
-		while (rs.next()) {
-
-			title = rs.getString("title");
-			src = rs.getString("image");
-			bookId = rs.getInt("book_id");
-			quantity = rs.getInt("cart_quantity");
-			price = rs.getDouble("price");
-			totalCost = (quantity * price) + totalCost;
-			bookCount += quantity;
-		}
-		conn.close();
+		
+		while(rs.next()){
+			email = rs.getString("email");
+			first = rs.getString("firstname");
+			last =rs.getString("lastname");
+			phone = rs.getString("phone");
+			address1 = rs.getString("address1");
+			address2 =rs.getString("address2");
+			postal=rs.getString("postalcode");
+			unit=rs.getString("unit");
+		}	
+		
+		
+	conn.close();
 	} catch (Exception e) {
-		e.printStackTrace();
-		out.println("Error: " + e);
-	} --%>
+	e.printStackTrace();
+	out.println("Error: " + e);
+	}
+	
+	
 	%>
 
 	<div class="container">
@@ -66,6 +72,7 @@ if (userRole != null) {
 		<form class="needs-validation" novalidate
 			action="<%=request.getContextPath()%>/AuthorizePaymentServlet"
 			method="POST">
+		<input type="hidden" name="memberId" value="<%=member_id1%>">
 			<div class="row">
 				<div class="col-md-4 order-md-2 mb-4">
 					<h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -138,55 +145,47 @@ if (userRole != null) {
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label for="firstName">First name</label> <input type="text"
-								class="form-control" id="firstName" placeholder="" value=""
+								class="form-control" id="firstName" readonly value="<%=first%>"
 								required>
-							<div class="invalid-feedback">Valid first name is required.
-							</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="lastName">Last name</label> <input type="text"
-								class="form-control" id="lastName" placeholder="" value=""
+								class="form-control" id="lastName" readonly value="<%=last%>"
 								required>
-							<div class="invalid-feedback">Valid last name is required.
-							</div>
 						</div>
 					</div>
 					<div class="mb-3">
-						<label for="email">Email <span class="text-muted">(Optional)</span></label>
-						<input type="email" class="form-control" id="email"
-							placeholder="you@example.com">
-						<div class="invalid-feedback">Please enter a valid email
-							address for shipping updates.</div>
+						<label for="email">Email</label>
+						<input type="email" class="form-control" readonly id="email"
+							value="<%=email%>">
 					</div>
 
 					<div class="mb-3">
 						<label for="address">Address</label> <input type="text"
-							class="form-control" id="address" placeholder="1234 Main St"
+							class="form-control" id="address" placeholder="Address 1" value="<%=address1%>"
 							required>
-						<div class="invalid-feedback">Please enter your shipping
-							address.</div>
 					</div>
 
 					<div class="mb-3">
 						<label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
 						<input type="text" class="form-control" id="address2"
-							placeholder="Apartment or suite">
+							placeholder="Address 2" value="<%=address2%>" >
 					</div>
 
 					<div class="row">
 						<div class="col-md-4 mb-3">
 							<label for="zip">Postal Code</label> <input type="text"
-								class="form-control" id="zip" placeholder="" required>
+								class="form-control" id="postal" placeholder="" value="<%=postal%>" required>
 							<div class="invalid-feedback">Postal code required.</div>
 						</div>
 						<div class="col-md-4 mb-3">
 							<label for="phone">Phone Number</label> <input type="text"
-								class="form-control" id="phone" placeholder="" required>
+								class="form-control" id="phone" placeholder="" value="<%=phone%>" required>
 							<div class="invalid-feedback">Phone number required.</div>
 						</div>
 						<div class="col-md-4 mb-3">
 							<label for="unit">Unit Number</label> <input type="text"
-								class="form-control" id="unit" placeholder="" required>
+								class="form-control" id="unit" placeholder="" value="<%=unit%>" required>
 							<div class="invalid-feedback">Unit number required.</div>
 						</div>
 					</div>
@@ -197,11 +196,6 @@ if (userRole != null) {
 							id="same-address"> <label class="custom-control-label"
 							for="same-address">Shipping address is the same as my
 							billing address</label>
-					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="save-info">
-						<label class="custom-control-label" for="save-info">Save
-							this information for next time</label>
 					</div>
 					<hr class="mb-4">
 					<button class="btn btn-primary btn-lg btn-block" type="submit">Continue

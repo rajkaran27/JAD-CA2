@@ -1,7 +1,6 @@
 package servlets;
 
 import java.util.*;
-
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.*;
 import java.math.BigDecimal;
@@ -12,14 +11,14 @@ public class PaymentServices {
 	private static final String CLIENT_SECRET = "EKGl2fYCaYOUv15EpCsH1Mca2LJjw-7k_-yfzRx2SIJ2b08MpXl5kPxtgRVlMjcN4LJ4MTBOFR8dzKDq";
 	private static final String MODE = "sandbox";
 
-	public String authorizePayment(OrderDetail orderDetail) throws PayPalRESTException {
+	public String authorizePayment(OrderDetail orderDetail, int memberId) throws PayPalRESTException {
 
 		Payer payer = getPayerInformation();
-		RedirectUrls redirectUrls = getRedirectURLs();
-		Transaction transaction = getSingleTransaction(orderDetail); // Change to getSingleTransaction
+		RedirectUrls redirectUrls = getRedirectURLs(memberId);
+		Transaction transaction = getSingleTransaction(orderDetail);
 
 		Payment requestPayment = new Payment();
-		requestPayment.setTransactions(Collections.singletonList(transaction)); // Change to set a single transaction
+		requestPayment.setTransactions(Collections.singletonList(transaction));
 		requestPayment.setRedirectUrls(redirectUrls);
 		requestPayment.setPayer(payer);
 		requestPayment.setIntent("authorize");
@@ -37,18 +36,22 @@ public class PaymentServices {
 		payer.setPaymentMethod("paypal");
 
 		PayerInfo payerInfo = new PayerInfo();
-		payerInfo.setFirstName("William").setLastName("Peterson").setEmail("william.peterson@company.com");
+		payerInfo.setFirstName("William").setLastName("Peterson").setEmail("sb-6sfvo26864830@personal.example.com");
 
 		payer.setPayerInfo(payerInfo);
 
 		return payer;
 	}
 
-	private RedirectUrls getRedirectURLs() {
+	private RedirectUrls getRedirectURLs(int memberId) {
 		RedirectUrls redirectUrls = new RedirectUrls();
-		redirectUrls.setCancelUrl("http://localhost:8080/PaypalTest/cancel.html");
-		redirectUrls.setReturnUrl("http://localhost:8080/PaypalTest/review_payment");
 
+		String baseUrl = "http://localhost:8080/JAD-CA2/PaymentDone";
+		StringBuilder returnUrl = new StringBuilder(baseUrl);
+		returnUrl.append("?member_id=").append(memberId);
+
+		redirectUrls.setCancelUrl("http://localhost:8080/JAD-CA2/pages/paymentFailed.jsp");
+		redirectUrls.setReturnUrl(returnUrl.toString());
 		return redirectUrls;
 	}
 

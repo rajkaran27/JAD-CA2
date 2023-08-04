@@ -114,7 +114,6 @@ Description: JAD CA1
 							<option value="" selected disabled>Select category</option>
 							<%
 							// Category dynamic listing
-							Connection conn = null;
 							try {
 								conn = DBConnection.getConnection();
 

@@ -34,14 +34,8 @@ Description: JAD CA1
 
 
 	<%
-	
-	
-	
 	String message = request.getParameter("errCode");
 	%>
-
-
-
 
 	<section class="h-100" style="background-color: #0C243C;">
 		<div class="container h-100">

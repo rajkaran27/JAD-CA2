@@ -41,7 +41,6 @@ body {
 	} else {
 		out.print("error");
 	}
-	Connection conn = null;
 	try {
 		StringBuilder htmlBuilder = new StringBuilder();
 

@@ -24,6 +24,12 @@ public class AuthorizePaymentServlet extends HttpServlet {
 		String[] priceArray = request.getParameterValues("onePrice");
 		String[] quantityArray = request.getParameterValues("oneQuantity");
 		String[] bookIdsArray = request.getParameterValues("bookId");
+		/*
+		 * String first = request.getParameter("firstName"); String last =
+		 * request.getParameter("lastName"); String email =
+		 * request.getParameter("email"); String member_id =
+		 * request.getParameter("memberId");
+		 */
 		OrderDetail orderDetail = new OrderDetail();
 
 		List<Integer> bookIdsList = new ArrayList<>();
@@ -47,7 +53,9 @@ public class AuthorizePaymentServlet extends HttpServlet {
 
 		try {
 			PaymentServices paymentServices = new PaymentServices();
-			String approvalLink = paymentServices.authorizePayment(orderDetail);
+			int memberId = Integer.parseInt(request.getParameter("memberId"));
+			String approvalLink = paymentServices.authorizePayment(orderDetail, memberId);
+			// String approvalLink = paymentServices.authorizePayment(orderDetail);
 
 			response.sendRedirect(approvalLink);
 

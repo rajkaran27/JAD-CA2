@@ -41,8 +41,6 @@ Description: JAD CA1
 	String category = "";
 	int rating = 0;
 	double price = 0;
-
-	Connection conn = null;
 	try {
 		conn = DBConnection.getConnection();
 		String sqlStr = "SELECT books.*, categories.category_name AS category, publishers.publisher_name AS publisher, authors.author_name AS author FROM books JOIN categories ON categories.category_id=books.category_id JOIN publishers ON publishers.publisher_id = books.publisher_id JOIN authors ON authors.author_id = books.author_id WHERE books.book_id = ?";
