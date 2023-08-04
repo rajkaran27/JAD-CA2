@@ -43,10 +43,13 @@ public class PaymentDone extends HttpServlet {
 		HttpSession session = request.getSession();
 		String memberId = request.getParameter("member_id");
 
-		response.sendRedirect("http://localhost:8080/JAD-CA2/pages/paymentSuccessful.jsp");
+		double total_price = 0;
 
 		try {
-			StringBuilder htmlBuilder = new StringBuilder();
+			StringBuilder receipt = new StringBuilder();
+			StringBuilder orders = new StringBuilder();
+
+			
 
 			Connection conn = DBConnection.getConnection();
 
@@ -54,18 +57,67 @@ public class PaymentDone extends HttpServlet {
 
 			CallableStatement cs = conn.prepareCall(sqlCall);
 			cs.setString(1, memberId);
+			
+			int orderCount = 1;
+			boolean isFirstRow = true; 
 
-			// Step 5: Execute SQL query
 			ResultSet rs = cs.executeQuery();
-			while(rs.next()) {
-				
-			}
-			
-			
-			response.sendRedirect(path+"//paymentSuccessful.jsp");
+			while (rs.next()) {
+				String title = rs.getString("title");
+				double price = rs.getDouble("price");
+				int quantity = rs.getInt("quantity");
 
-			
-			// Close connection
+				orders.append("<tr>\r\n" + "    <th scope=\"row\">" + orderCount + "</th>\r\n" + "    <td>\r\n"
+						+ "        <div>\r\n" + "            <h5 class=\"text-truncate font-size-14 mb-1\">")
+						.append(title).append("</h5></div>\r\n" + "    </td>\r\n" + "    <td>$").append(price)
+						.append("</td>\r\n" + "    <td>").append(quantity)
+						.append("</td>\r\n" + "    <td class=\"text-end\">$").append(price * quantity)
+						.append("</td>\r\n" + "</tr>");
+				orderCount++;
+				total_price +=price;
+				if (isFirstRow) {
+
+					String first = rs.getString("firstname");
+					String last = rs.getString("lastname");
+					String address1 = rs.getString("address1");
+					String address2 = rs.getString("address2");
+					String postal = rs.getString("postalcode");
+					String unit = rs.getString("unit");
+					String date = rs.getString("order_date");
+					String email = rs.getString("email");
+					String phone = rs.getString("phone");
+					String orderId = rs.getString("order_id");
+
+					receipt.append("<div class=\"row\">\r\n" + "    <div class=\"col-sm-6\">\r\n"
+							+ "        <div class=\"text-muted\">\r\n"
+							+ "            <h5 class=\"font-size-16 mb-3\">Billed To:</h5>\r\n"
+							+ "            <h5 class=\"font-size-15 mb-2\">").append(first).append(" ").append(last)
+							.append("</h5>\r\n" + "            <p class=\"mb-1\">").append(address1).append(" ")
+							.append(address2).append(" ").append(postal).append(" ").append(unit)
+							.append("</p>\r\n" + "            <p class=\"mb-1\">").append(email)
+							.append("</p>\r\n" + "            <p>").append(phone)
+							.append("</p>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "\r\n"
+									+ "    <div class=\"col-sm-6\">\r\n"
+									+ "        <div class=\"text-muted text-sm-end\">\r\n" + "            <div>\r\n"
+									+ "                <h5 class=\"font-size-15 mb-1\">Order ID:</h5>\r\n"
+									+ "                <p>")
+							.append(orderId)
+							.append("</p>\r\n" + "            </div>\r\n" + "            <div class=\"mt-4\">\r\n"
+									+ "                <h5 class=\"font-size-15 mb-1\">Invoice Date:</h5>\r\n"
+									+ "                <p>")
+							.append(date).append("</p>\r\n" + "            </div>\r\n" + "        </div>\r\n"
+									+ "    </div>\r\n" + "</div>");
+
+					isFirstRow = false;
+				}
+
+			}
+
+			session.setAttribute("total", total_price);
+			session.setAttribute("receipt", receipt.toString());
+			session.setAttribute("orders", orders.toString());
+			response.sendRedirect(path + "//paymentSuccessful.jsp");
+
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,15 +125,4 @@ public class PaymentDone extends HttpServlet {
 		}
 
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }
