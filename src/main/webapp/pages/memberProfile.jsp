@@ -39,7 +39,6 @@ img {
 
 	<div class="container">
 		<%
-		Connection conn = null;
 		try {
 
 			conn = DBConnection.getConnection();
