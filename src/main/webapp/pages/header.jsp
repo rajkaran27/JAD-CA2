@@ -134,8 +134,9 @@ Description: JAD CA1
 				} else if (userRoleH.equals("owner")) {
 				%>
 				<div class="d-flex">
-					<a class="btn" href="memberInfo.jsp">Member Management</a> <a
-						class="btn" href="bookShelf.jsp">BookShelf</a>
+					<a class="btn" href="memberInfo.jsp">Member Management</a> 
+					<a class="btn" href="bookShelf.jsp">BookShelf</a>
+					<a class="btn" href="sales.jsp">Sales</a>
 					<form class="d-flex">
 						<button class="btn btn-outline-primary me-2" type="button"
 							onClick="window.location.href='logoutFunction.jsp'">Logout</button>
