@@ -58,29 +58,6 @@
 									</thead>
 									<tbody>
 										<%=orders %>
-<!-- 										<tr>
-											<th scope="row" colspan="4" class="text-end">Sub Total</th>
-											<td class="text-end">$732.50</td>
-										</tr> -->
-
-<!-- 										<tr>
-											<th scope="row" colspan="4" class="border-0 text-end">
-												Discount :</th>
-											<td class="border-0 text-end">- $25.50</td>
-										</tr>
-
-										<tr>
-											<th scope="row" colspan="4" class="border-0 text-end">
-												Shipping Charge :</th>
-											<td class="border-0 text-end">$20.00</td>
-										</tr>
-
-										<tr>
-											<th scope="row" colspan="4" class="border-0 text-end">
-												Tax</th>
-											<td class="border-0 text-end">$12.00</td>
-										</tr> -->
-
 										<tr>
 											<th scope="row" colspan="4" class="border-0 text-end">Total</th>
 											<td class="border-0 text-end">

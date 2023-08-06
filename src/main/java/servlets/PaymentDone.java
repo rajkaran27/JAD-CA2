@@ -74,7 +74,7 @@ public class PaymentDone extends HttpServlet {
 						.append("</td>\r\n" + "    <td class=\"text-end\">$").append(price * quantity)
 						.append("</td>\r\n" + "</tr>");
 				orderCount++;
-				total_price +=price;
+				total_price +=price*quantity;
 				if (isFirstRow) {
 
 					String first = rs.getString("firstname");
