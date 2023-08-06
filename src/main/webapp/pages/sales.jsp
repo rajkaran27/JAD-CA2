@@ -14,6 +14,7 @@ String userRole = (String) session.getAttribute("sessUserRole");
 if (userRole != null) {
 	if (userRole.equals("owner")) {
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
