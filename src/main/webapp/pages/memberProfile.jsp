@@ -62,17 +62,17 @@ img {
 			<div class="mb-3">
 				<label for="username" class="form-label">Username</label> <input
 					type="text" class="form-control" id="username" name="username"
-					value=<%=username%> required>
+					value=<%=username%> required readonly>
 			</div>
 			<div class="mb-3">
 				<label for="email" class="form-label">Email</label> <input
 					type="email" class="form-control" id="email" name="email"
-					value=<%=email%> required>
+					value=<%=email%> required readonly>
 			</div>
 			<div class="mb-3">
 				<label for="password" class="form-label">Password</label> <input
 					type="password" class="form-control" id="password" name="password"
-					value=<%=password%> required>
+					value=<%=password%> required readonly>
 			</div>
 			<div class="d-flex justify-content-between mt-5 mb-5">
 				<div class="text-start" style="color: #0C243C;">
@@ -124,10 +124,8 @@ img {
 
 	<script>
 		function confirmDelete(memberId) {
-		  if (confirm("Are you sure you want your account?")) {
-		    window.location.href = "<%=request.getContextPath()%>
-		/DeleteMemberProfileServlet?memberId="
-						+ memberId;
+		  if (confirm("Are you sure you want to delete your account?")) {
+		    window.location.href = "<%=request.getContextPath()%>/DeleteMemberProfileServlet?memberId="+ memberId;
 			}
 		}
 	</script>

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.*;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -29,11 +30,11 @@ public class UpdateMemberServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/* ===========================================================
-		Author: Pranjal (2228396)
-		Date: 9/6/2023
-		Description: JAD CA1
-		============================================================= */
+		/*
+		 * =========================================================== Author: Pranjal
+		 * (2228396) Date: 9/6/2023 Description: JAD CA1
+		 * =============================================================
+		 */
 		String path = request.getContextPath() + "/pages";
 
 		String email = request.getParameter("email");
@@ -43,6 +44,7 @@ public class UpdateMemberServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
+		String userRole = (String) session.getAttribute("sessUserRole");
 
 		try {
 
@@ -66,7 +68,12 @@ public class UpdateMemberServlet extends HttpServlet {
 			// Execute SQL query
 			int rowsAffected = pstmt.executeUpdate();
 
-			response.sendRedirect(path + "//memberInfo.jsp");
+			if (userRole.equals("member")) {
+				response.sendRedirect(path + "//memberProfile.jsp" + "?memberId=" + member_id);
+			} else if (userRole.equals("owner")) {
+				response.sendRedirect(path + "//memberInfo.jsp");
+
+			}
 
 			// Step 7: Close connection
 			conn.close();
