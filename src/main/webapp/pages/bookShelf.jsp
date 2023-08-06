@@ -270,8 +270,56 @@ Description: JAD CA2
 		</div>
 	</div>
 
-	</div>
+	<div class="container">
+		<h2>Low in stock books</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Quantity</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%
+				// Books dynamic listing
 
+				try {
+					conn = DBConnection.getConnection();
+
+					// Step 4: Create Statement object
+					Statement stmt = conn.createStatement();
+
+					// Step 5: Execute SQL Command
+					String sqlStr = "SELECT books.book_id,books.title,books.quantity,authors.author_name FROM books JOIN authors ON authors.author_id=books.author_id ORDER BY quantity LIMIT 5;";
+					ResultSet rs = stmt.executeQuery(sqlStr);
+
+					// Step 6: Process Result
+					while (rs.next()) {
+						String title = rs.getString("title");
+						String author = rs.getString("author_name");
+						int quantity = rs.getInt("quantity");
+						int bookId = rs.getInt("book_id");
+				%>
+				<tr>
+					<td><%=title%></td>
+					<td><%=author%></td>
+					<td><%=quantity%></td>
+					
+				</tr>
+				<%
+				}
+
+				// Step 7: Close connection
+				conn.close();
+				} catch (Exception e) {
+				out.println("Error :" + e);
+				}
+				%>
+			</tbody>
+		</table>
+	</div>
+	</div>
 
 	<script>
 	//to delete book confirmation.
