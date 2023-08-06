@@ -20,7 +20,10 @@ public class AuthorizePaymentServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		String path = request.getContextPath() + "/pages";
 
+		
 		String[] priceArray = request.getParameterValues("onePrice");
 		String[] quantityArray = request.getParameterValues("oneQuantity");
 		String[] bookIdsArray = request.getParameterValues("bookId");
@@ -62,7 +65,7 @@ public class AuthorizePaymentServlet extends HttpServlet {
 		} catch (PayPalRESTException ex) {
 			request.setAttribute("errorMessage", ex.getMessage());
 			ex.printStackTrace();
-			request.getRequestDispatcher("error.jsp").forward(request, response);
+			response.sendRedirect(path+"//paymentFailed.jsp");
 		}
 	}
 

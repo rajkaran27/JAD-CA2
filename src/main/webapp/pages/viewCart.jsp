@@ -71,6 +71,12 @@ table tbody td, table thead th {
 			cartItem.put("quantity", rs.getInt("cart_quantity"));
 			cartItem.put("price", rs.getDouble("price"));
 			cartItems.add(cartItem);
+
+			// Update total book count and total cost for each book
+			int quantity = (int) cartItem.get("quantity");
+			double price = (double) cartItem.get("price");
+			bookCount += quantity;
+			totalCost += (quantity * price);
 		}
 		conn.close();
 	} catch (Exception e) {
@@ -96,121 +102,155 @@ table tbody td, table thead th {
 	<%
 	} else {
 	%>
-	<div class="container h-100 py-5">
-		<h1 class="mb-5">Shopping Cart</h1>
-		<div
-			class="row d-flex justify-content-center align-items-center h-100">
-			<div class="col-lg-8 col-xl-9">
-				<div class="table-responsive">
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col" class="h5">Books</th>
-								<th scope="col">Category</th>
-								<th scope="col">Quantity</th>
-								<th scope="col">Price</th>
-								<th scope="col">Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<%
-							for (Map<String, Object> cartItem : cartItems) {
-								String title = (String) cartItem.get("title");
-								String src = (String) cartItem.get("src");
-								String author = (String) cartItem.get("author");
-								String category = (String) cartItem.get("category");
-								int bookId = (int) cartItem.get("bookId");
-								int quantity = (int) cartItem.get("quantity");
-								double price = (double) cartItem.get("price");
-								totalCost = (quantity * price) + totalCost;
-								bookCount += quantity;
-							%>
-							<tr>
-								<th scope="row">
-									<div class="d-flex align-items-center">
-										<img src="<%=src%>" class="img-fluid rounded-3"
-											style="width: 120px;" alt="Book">
-										<div class="flex-column ms-4">
-											<p class="mb-2" style="color: #FDF4E3;">
-												<%=title%>
-											</p>
-											<p class="mb-0" style="color: #FDF4E3;">
-												<%=author%>
-											</p>
+	<form action="<%=request.getContextPath()%>/CheckoutServlet"
+		method="POST">
+		<input type="hidden" name="memberId" value="<%=member_id1%>" />
+
+		<div class="container h-100 py-5">
+			<h1 class="mb-5">Shopping Cart</h1>
+			<div
+				class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col-lg-8 col-xl-9">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col" class="h5">Books</th>
+									<th scope="col">Category</th>
+									<th scope="col">Quantity</th>
+									<th scope="col">Price</th>
+									<th scope="col">Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								for (Map<String, Object> cartItem : cartItems) {
+									String title = (String) cartItem.get("title");
+									String src = (String) cartItem.get("src");
+									String author = (String) cartItem.get("author");
+									String category = (String) cartItem.get("category");
+									int bookId = (int) cartItem.get("bookId");
+									int quantity = (int) cartItem.get("quantity");
+									double price = (double) cartItem.get("price");
+								%>
+								<tr>
+									<th scope="row">
+										<div class="d-flex align-items-center">
+											<img src="<%=src%>" class="img-fluid rounded-3"
+												style="width: 120px;" alt="Book">
+											<div class="flex-column ms-4">
+												<p class="mb-2" style="color: #FDF4E3;">
+													<%=title%>
+												</p>
+												<p class="mb-0" style="color: #FDF4E3;">
+													<%=author%>
+												</p>
+											</div>
 										</div>
-									</div>
-								</th>
-								<td class="align-middle">
-									<p class="mb-0" style="font-weight: 500;">
-										<%=category%>
-									</p>
-								</td>
-								<td class="align-middle">
-									<p class="mb-0" style="font-weight: 500;">
-										<input type="number"  min="1"
-											class="form-control" style="max-width: 80px;"
-											value="<%=quantity%>"
-											 />
-
-									</p>
-								</td>
-								<td class="align-middle">
-									<p class="mb-0" style="font-weight: 500;">
-										$<span id="bookCost_<%=bookId%>" data-price="<%=price%>">
-											<%=String.format("%.2f", (quantity * price))%>
-										</span>
-									</p>
-								</td>
-								<td class="align-middle"><a
-									class="btn btn-danger btn-sm delete-button"
-									onclick="confirmDelete(<%=bookId%>)"> Delete </a></td>
-							</tr>
-							<%
-							}
-							%>
-						</tbody>
-					</table>
+									</th>
+									<td class="align-middle">
+										<p class="mb-0" style="font-weight: 500;">
+											<%=category%>
+										</p>
+									</td>
+									<td class="align-middle">
+										<p class="mb-0" style="font-weight: 500;">
+											<!-- Add "id" attribute to the quantity input element -->
+											<input type="number" min="1" class="form-control"
+												style="max-width: 80px;" id="quantity_<%=bookId%>"
+												name="quantity_<%=bookId%>" value="<%=quantity%>"
+												oninput="updatePrice(<%=bookId%>, <%=price%>)" />
+										</p>
+									</td>
+									<td class="align-middle">
+										<p class="mb-0" style="font-weight: 500;">
+											$<span id="bookCost_<%=bookId%>" data-price="<%=price%>">
+												<%=String.format("%.2f", (quantity * price))%>
+											</span>
+										</p>
+									</td>
+									<td class="align-middle"><a
+										class="btn btn-danger btn-sm delete-button"
+										onclick="confirmDelete(<%=bookId%>)"> Delete </a></td>
+								</tr>
+								<%
+								}
+								%>
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</div>
 
-			<div class="col-lg-4 col-xl-3">
-				<div class="card">
-					<div class="card-body">
-						<div class="d-flex justify-content-between"
-							style="font-weight: 500;">
-							<p class="mb-2">Total Books:</p>
-							<p class="mb-2"><%=bookCount%></p>
-						</div>
-						<hr class="my-4">
-						<div class="d-flex justify-content-between mb-4"
-							style="font-weight: 500;">
-							<p class="mb-2">Total Cost:</p>
-							<p class="mb-2" id="totalCost">
-								$<%=String.format("%.2f", totalCost)%>
-							</p>
-						</div>
-						<button type="button" class="btn btn-primary btn-block btn-lg ">
-							<div class="d-flex justify-content-end">
-								<a href="checkout.jsp">Checkout</a>
+				<div class="col-lg-4 col-xl-3">
+					<div class="card">
+						<div class="card-body">
+							<div class="d-flex justify-content-between"
+								style="font-weight: 500;">
+								<p class="mb-2">Total Books:</p>
+								<p class="mb-2" id="totalBooks"><%=bookCount%></p>
 							</div>
-						</button>
+							<hr class="my-4">
+							<div class="d-flex justify-content-between mb-4"
+								style="font-weight: 500;">
+								<p class="mb-2">Total Cost:</p>
+								<p class="mb-2" id="totalCost">
+									$<%=String.format("%.2f", totalCost)%>
+								</p>
+							</div>
+							<button type="submit" class="btn btn-primary btn-block btn-lg">
+								Proceed to Checkout</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 	<%
 	}
 	%>
 
 	<script>
-        function confirmDelete(bookId) {
-            var memberId = <%= member_id1 %>;
-            if (confirm("Are you sure you want to delete this item?")) {
-                window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId=" + bookId +"&memberId="+memberId;
-            }
+    function confirmDelete(bookId) {
+        var memberId = <%=member_id1%>;
+        if (confirm("Are you sure you want to delete this item?")) {
+            window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId=" + bookId + "&memberId=" + memberId;
         }
-    </script>
+    }
+
+    function updatePrice(bookId, price) {
+        var quantityInput = document.getElementById("quantity_" + bookId);
+        var bookCostElement = document.getElementById("bookCost_" + bookId);
+        var totalCostElement = document.getElementById("totalCost");
+        var totalBooksElement = document.getElementById("totalBooks");
+
+        var quantity = parseInt(quantityInput.value);
+        var bookCost = quantity * price;
+
+        bookCostElement.innerHTML = bookCost.toFixed(2);
+
+        // Recalculate the total cost and total book count
+        var totalCost = 0;
+        var totalBooks = 0;
+        var cartItems = document.querySelectorAll("tbody tr");
+
+        for (var i = 0; i < cartItems.length; i++) {
+            var itemRow = cartItems[i];
+            var itemQuantityInput = itemRow.querySelector(".form-control");
+            var itemBookCostElement = itemRow.querySelector("[id^='bookCost_']");
+
+            var itemQuantity = parseInt(itemQuantityInput.value);
+            var itemPrice = parseFloat(itemBookCostElement.getAttribute("data-price"));
+
+            totalCost += itemQuantity * itemPrice;
+            totalBooks += itemQuantity;
+        }
+
+        // Update the displayed total cost and total book count
+        totalCostElement.innerHTML = "$"+totalCost.toFixed(2);
+        totalBooksElement.innerHTML = totalBooks;
+    }
+</script>
+
 	<%@ include file="footer.jsp"%>
 </body>
 </html>
