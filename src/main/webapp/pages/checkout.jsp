@@ -5,6 +5,14 @@
 <%@ page import="java.net.*"%>
 <%@ page import="servlets.DBConnection"%>
 <%
+/* ===========================================================
+Author: Rajkaran (2109039)
+Date: 7/8/2023
+Description: JAD CA2
+============================================================= */
+%>
+
+<%
 String userRole = (String) session.getAttribute("sessUserRole");
 if (userRole != null) {
 	if (userRole.equals("member")) {

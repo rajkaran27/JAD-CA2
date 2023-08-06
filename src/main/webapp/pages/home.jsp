@@ -2,6 +2,13 @@
 	pageEncoding="ISO-8859-1"%>
 <%@page import="java.sql.*"%>
 <%@ page import="servlets.DBConnection"%>
+<%
+/* ===========================================================
+Author: Rajkaran (2109039)
+Date: 7/8/2023
+Description: JAD CA2
+============================================================= */
+%>
 <!DOCTYPE html>
 <html>
 <head>

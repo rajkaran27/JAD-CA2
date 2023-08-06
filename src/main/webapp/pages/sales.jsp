@@ -151,22 +151,20 @@ img {
 										</tbody>
 									</table>
 								</div>
-								<div class="card-footer">
+								<%-- <div class="card-footer">
 									<div class="row">
 										<div class="col-md-6 offset-md-6">
 											<h5 class="text-end" style="color: black;">
 												Total Cost: $<%=session.getAttribute("total_price")%></h5>
 										</div>
 									</div>
-								</div>
+								</div> --%>
 							</div>
 
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row">
 			<div class="col-md-6">
 				<div class="sales-box">
 					<h3>Top 10 Customers by Purchase Value</h3>
@@ -216,6 +214,7 @@ img {
 				</div>
 			</div>
 		</div>
+		<div class="row"></div>
 	</div>
 	<%@ include file="footer.jsp"%>
 </body>
