@@ -1,8 +1,11 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.net.*;
 
@@ -31,38 +34,41 @@ public class RemoveFromCartServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/* ===========================================================
-		Author: Pranjal (2228396)
-		Date: 9/6/2023
-		Description: JAD CA1
-		============================================================= */
+		/*
+		 * =========================================================== Author: Pranjal
+		 * (2228396) Date: 9/6/2023 Description: JAD CA1
+		 * =============================================================
+		 */
 		String path = request.getContextPath() + "/pages";
-		// Retrieve the bookId parameter from the request
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
+
 		String bookIdStr = request.getParameter("bookId");
+		String memberIdStr = request.getParameter("memberId");
 
-		if (bookIdStr != null && !bookIdStr.isEmpty()) {
-			try {
-				int bookId = Integer.parseInt(bookIdStr);
+		int bookId = Integer.parseInt(bookIdStr);
+		int memberId = Integer.parseInt(memberIdStr);
+		
+		
+		try {
+			Connection conn = DBConnection.getConnection();
 
-				// Get the cart from the session
-				HttpSession session = request.getSession();
-				ArrayList<Integer> cart = (ArrayList<Integer>) session.getAttribute("shoppingCart");
+			// Step 5: Execute SQL Command
+			String sqlStr = "DELETE FROM cart WHERE book_id=? AND member_id=?;";
+			PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 
-				// Check if the cart exists
-				if (cart != null) {
-					// Remove the bookId from the cart
-					cart.remove(Integer.valueOf(bookId));
-
-					// Update the cart in the session
-					session.setAttribute("shoppingCart", cart);
-				}
-			} catch (NumberFormatException e) {
-				// Handle invalid bookId format
-				e.printStackTrace();
-			}
+			// Set parameter values for placeholders
+			pstmt.setInt(1, bookId);
+			pstmt.setInt(2, memberId);
+			
+			
+			pstmt.executeUpdate();
+			//response.sendRedirect(path + "//bookShelf.jsp?errCode=added");
+			conn.close();
+		} catch (Exception e) {
+			out.println("Error :" + e);
 		}
 
-		// Redirect back to the view cart page
 		response.sendRedirect(path + "//viewCart.jsp");
 
 	}

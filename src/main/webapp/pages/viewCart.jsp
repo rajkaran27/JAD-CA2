@@ -49,6 +49,7 @@ table tbody td, table thead th {
 	<%
 	int bookCount = 0;
 	double totalCost = 0;
+	List<Map<String, Object>> cartItems = new ArrayList<>();
 
 	try {
 		conn = DBConnection.getConnection();
@@ -61,16 +62,15 @@ table tbody td, table thead th {
 		ResultSet rs = pstmt.executeQuery();
 
 		while (rs.next()) {
-
-			String title = rs.getString("title");
-			String src = rs.getString("image");
-			String author = rs.getString("author_name");
-			String category = rs.getString("category_name");
-			int bookId = rs.getInt("book_id");
-			int quantity = rs.getInt("cart_quantity");
-			double price = rs.getDouble("price");
-			totalCost = (quantity * price) + totalCost;
-			bookCount += quantity;
+			Map<String, Object> cartItem = new HashMap<>();
+			cartItem.put("title", rs.getString("title"));
+			cartItem.put("src", rs.getString("image"));
+			cartItem.put("author", rs.getString("author_name"));
+			cartItem.put("category", rs.getString("category_name"));
+			cartItem.put("bookId", rs.getInt("book_id"));
+			cartItem.put("quantity", rs.getInt("cart_quantity"));
+			cartItem.put("price", rs.getDouble("price"));
+			cartItems.add(cartItem);
 		}
 		conn.close();
 	} catch (Exception e) {
@@ -80,14 +80,14 @@ table tbody td, table thead th {
 	%>
 
 	<%
-	if (bookCount == 0) {
+	if (cartItems.isEmpty()) {
 	%>
 	<div class="container mt-5">
 		<div class="row">
 			<div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">
 				<img src="${pageContext.request.contextPath}/assets/bag.svg" alt=""
 					class="img-fluid mb-4">
-				<h2>Your shopping cart is empty</h2> 
+				<h2>Your shopping cart is empty</h2>
 				<p class="mb-4">Keep Shopping!</p>
 				<a href="home.jsp" class="btn btn-primary">Explore Books</a>
 			</div>
@@ -114,28 +114,16 @@ table tbody td, table thead th {
 						</thead>
 						<tbody>
 							<%
-							try {
-								conn = DBConnection.getConnection();
-
-								String sqlStr = "SELECT books.*, authors.author_name, categories.category_name,cart.cart_quantity FROM books JOIN authors ON books.author_id = authors.author_id JOIN categories ON books.category_id = categories.category_id JOIN cart ON books.book_id = cart.book_id WHERE cart.member_id = ?;";
-								PreparedStatement pstmt = conn.prepareStatement(sqlStr);
-
-				
-								pstmt.setInt(1, member_id1);
-
-								ResultSet rs = pstmt.executeQuery();
-
-								while (rs.next()) {
-
-									String title = rs.getString("title");
-									String src = rs.getString("image");
-									String author = rs.getString("author_name");
-									String category = rs.getString("category_name");
-									int bookId = rs.getInt("book_id");
-									int quantity = rs.getInt("cart_quantity");
-									double price = rs.getDouble("price");
-									totalCost = (quantity*price) +totalCost;
-									bookCount += quantity;
+							for (Map<String, Object> cartItem : cartItems) {
+								String title = (String) cartItem.get("title");
+								String src = (String) cartItem.get("src");
+								String author = (String) cartItem.get("author");
+								String category = (String) cartItem.get("category");
+								int bookId = (int) cartItem.get("bookId");
+								int quantity = (int) cartItem.get("quantity");
+								double price = (double) cartItem.get("price");
+								totalCost = (quantity * price) + totalCost;
+								bookCount += quantity;
 							%>
 							<tr>
 								<th scope="row">
@@ -143,31 +131,41 @@ table tbody td, table thead th {
 										<img src="<%=src%>" class="img-fluid rounded-3"
 											style="width: 120px;" alt="Book">
 										<div class="flex-column ms-4">
-											<p class="mb-2" style="color: #FDF4E3;"><%=title%></p>
-											<p class="mb-0" style="color: #FDF4E3;"><%=author%></p>
+											<p class="mb-2" style="color: #FDF4E3;">
+												<%=title%>
+											</p>
+											<p class="mb-0" style="color: #FDF4E3;">
+												<%=author%>
+											</p>
 										</div>
 									</div>
 								</th>
 								<td class="align-middle">
-									<p class="mb-0" style="font-weight: 500;"><%=category%></p>
-								</td>
-								<td class="align-middle">
 									<p class="mb-0" style="font-weight: 500;">
-										<input type="number" min="1" class="form-control" style="max-width: 80px;" value="<%=quantity%>">
+										<%=category%>
 									</p>
 								</td>
 								<td class="align-middle">
 									<p class="mb-0" style="font-weight: 500;">
-										$<%=price%></p>
+										<input type="number"  min="1"
+											class="form-control" style="max-width: 80px;"
+											value="<%=quantity%>"
+											 />
+
+									</p>
 								</td>
-								<td class="align-middle"><a class="btn btn-danger btn-sm delete-button" onclick="confirmDelete(<%=bookId%>)">Delete</a></td>
+								<td class="align-middle">
+									<p class="mb-0" style="font-weight: 500;">
+										$<span id="bookCost_<%=bookId%>" data-price="<%=price%>">
+											<%=String.format("%.2f", (quantity * price))%>
+										</span>
+									</p>
+								</td>
+								<td class="align-middle"><a
+									class="btn btn-danger btn-sm delete-button"
+									onclick="confirmDelete(<%=bookId%>)"> Delete </a></td>
 							</tr>
 							<%
-							}
-							conn.close();
-							} catch (Exception e) {
-							e.printStackTrace();
-							out.println("Error: " + e);
 							}
 							%>
 						</tbody>
@@ -178,14 +176,18 @@ table tbody td, table thead th {
 			<div class="col-lg-4 col-xl-3">
 				<div class="card">
 					<div class="card-body">
-						<div class="d-flex justify-content-between" style="font-weight: 500;">
+						<div class="d-flex justify-content-between"
+							style="font-weight: 500;">
 							<p class="mb-2">Total Books:</p>
 							<p class="mb-2"><%=bookCount%></p>
 						</div>
 						<hr class="my-4">
-						<div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
+						<div class="d-flex justify-content-between mb-4"
+							style="font-weight: 500;">
 							<p class="mb-2">Total Cost:</p>
-							<p class="mb-2">$<%=totalCost%></p>
+							<p class="mb-2" id="totalCost">
+								$<%=String.format("%.2f", totalCost)%>
+							</p>
 						</div>
 						<button type="button" class="btn btn-primary btn-block btn-lg ">
 							<div class="d-flex justify-content-end">
@@ -202,20 +204,21 @@ table tbody td, table thead th {
 	%>
 
 	<script>
-		function confirmDelete(bookId) {
-			if (confirm("Are you sure you want to delete this item?")) {
-				window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId="+ bookId;
-			}
-		}
-	</script>
+        function confirmDelete(bookId) {
+            var memberId = <%= member_id1 %>;
+            if (confirm("Are you sure you want to delete this item?")) {
+                window.location.href = "<%=request.getContextPath()%>/RemoveFromCartServlet?bookId=" + bookId +"&memberId="+memberId;
+            }
+        }
+    </script>
 	<%@ include file="footer.jsp"%>
 </body>
 </html>
 <%
 } else {
-	response.sendRedirect("login.jsp?errCode=accessDenied");
+response.sendRedirect("login.jsp?errCode=accessDenied");
 }
 } else {
-	response.sendRedirect("login.jsp?errCode=accessDenied");
+response.sendRedirect("login.jsp?errCode=accessDenied");
 }
 %>
